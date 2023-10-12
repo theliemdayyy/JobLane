@@ -1,0 +1,16 @@
+@startuml
+    actor "Job Seeker" as JS
+    participant "Controller" as C
+    participant "Service" as S
+    participant "Database" as D
+
+JS -> C : Initiate job search
+C --> JS : Display search interface
+JS -> C : Provide search criteria
+C -> S : Process search criteria
+S -> D : Retrieve jobs based on filters
+D --> S : Return list of matching jobs
+S --> C : Send list of jobs
+C --> JS : Display list of jobs matching criteria
+
+@enduml
