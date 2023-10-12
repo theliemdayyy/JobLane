@@ -1,0 +1,27 @@
+@startuml
+title Login 
+actor Users as a
+participant Controller as a1
+participant Service as a2
+participant Database as a3
+a->a1++:Login request
+a1->a2++:Call login function
+a2->a3++:Find data user
+
+alt Not Found
+a3-->a2:Not found
+a2-->a1:Not found
+a1-->a:Not found
+else Found
+
+alt Failure Login
+a3-->a2:Found user
+a2-->a1:Invalid data
+a1-->a:Login Failure
+else Successful Login
+a3-->a2--:Found user
+a2-->a1--:Valid data
+a1-->a--:Login Successful
+end
+end
+@enduml
