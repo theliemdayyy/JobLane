@@ -1,0 +1,36 @@
+@startuml
+Actor "Employee" as E
+    participant "Controller" as C
+    participant "Service" as S
+    participant "Database" as D
+
+E -> C : Initiates CV creation
+C --> E : Show CV creation screen
+E -> C : Enter information
+C -> S : Enter information 
+
+alt Information is Invalid
+    S --> C : Return error message
+    C --> E : Display error message
+else Information is Valid
+    S -> D : Store information
+    D --> S : Confirmation
+    S --> C : Update with confirmation
+    C --> E : Display update successful
+end
+E -> C : Initiates CV preview
+C -> S : Generate CV preview
+S -> D : Fetch CV data
+D --> S : Return CV data
+S --> C : Display CV preview
+E -> C : Request Edits CV
+C -> S : Update CV data
+S -> D : Update CV data in database
+D --> S : Confirmation
+S --> C : Refresh CV preview
+E -> C : Confirm and save CV
+C -> S : Finalize CV
+S -> D : Store final CV
+D --> S : Confirmation
+S --> C : Display confirmation message
+@enduml
