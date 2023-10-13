@@ -1,0 +1,50 @@
+@startuml
+Actor "Job Seeker" as JS
+participant "Controller" as C
+participant "Service" as S
+participant "Database" as D
+participant "Employer" as E
+title INTERACTION
+group Chat Interaction
+    JS -> C : Initiate chat (after applying for job)
+    C -> S : Check if JS has applied for job
+    S -> D : Validate application status
+    D --> S : Return application status
+    alt JS has applied
+        S --> C : Allow chat initiation
+        C --> JS : Display chat interface
+        JS -> C : Send message
+        C -> S : Process message
+        S -> D : Store message in database
+        D --> S : Confirm message storage
+        S --> C : Send message to Employer
+        C --> E : Display message
+    else JS has not applied
+        S --> C : Deny chat initiation
+        C --> JS : Display error message
+    end
+end
+
+group Comment Interaction
+    JS -> C : View job post
+    C --> JS : Display job post with comments
+    JS -> C : Enter comment
+    C -> S : Process comment
+    S -> D : Store comment in database
+    D --> S : Confirm comment storage
+    S --> C : Update job post with new comment
+    C --> JS : Display updated job post with new comment
+end
+
+group Save/Favorite Job Post 
+    JS -> C : View job post
+    C --> JS : Display job post
+    JS -> C : Click on 'Favorite/Save' button
+    C -> S : Process favorite request
+    S -> D : Store job post in JS's favorites
+    D --> S : Confirm favorite storage
+    S --> C : Update job post as favorited
+    C --> JS : Display job post as favorited
+end
+
+@enduml
