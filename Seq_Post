@@ -1,0 +1,34 @@
+@startuml
+actor "Employer" as E
+participant "Controller" as C
+participant "Service" as S
+participant "Database" as D
+
+group Create Job Posting
+    E -> C ++ : Click "Create Job Posting"
+    C --> E : Display job posting form
+    E -> C : Fill out form with job details
+    C -> S ++ : Process job posting data
+    S -> D ++ : Store job posting in database
+    D --> S -- : Confirm job posting storage
+    S --> C --: Notify success/failure of job posting creation
+    C --> E : Display confirmation message
+    C --
+end
+
+group Close Job Posting
+    E -> C ++ : View own job postings
+    C -> S ++ : Retrieve list of job postings by Employer
+    S -> D ++ : Fetch job postings from database
+    D --> S -- : Return list of job postings
+    S --> C : Display list to Employer
+    E -> C : Click "Close" on a specific job posting
+    C -> S : Process close job posting request
+    S -> D ++ : Update job posting status to "Closed"
+    D --> S -- : Confirm status update
+    S --> C --: Notify success/failure of job posting closure
+    C --> E : Display confirmation message
+    C --
+end
+
+@enduml
