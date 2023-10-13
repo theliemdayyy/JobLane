@@ -1,0 +1,50 @@
+@startuml
+actor "Job Seeker" as JS
+actor "Employer" as E
+
+participant "Controller" as C
+participant "Service" as S
+participant "Database" as D
+
+title APPLICATION
+group Apply for Job Interaction
+    JS -> C ++ : View job post by Employer
+    C --> JS : Display job post details
+    JS -> C : Click "Apply" button
+    C --> JS : Display application form
+    JS -> C : Fill out form with additional information
+    C -> S ++ : Process form data
+    S -> D ++ : Store form data in database
+    D --> S : Confirm form data storage
+    S -> D : Retrieve JS's CV from database
+    D --> S : Return JS's CV
+    S -> D : Store application (form data + CV) in "List Job Applied" for JS
+    D --> S -- : Confirm application storage for JS
+    S --> C -- : Send application with form data and JS's CV to Employer
+    C --> E : Notify Employer of new application
+    C --> JS-- : Display confirmation of application sent
+end
+
+group Employer Updates Application Status
+    E -> C ++ : View "Candidate List"
+    C --> E : Display list of candidates with application status
+    E -> C : Click "Update Status" button for a JS's application
+    C --> E : Display status options (Approve/Deny)
+    E -> C : Select status (e.g., Approve)
+    C -> S ++ : Process status update
+    S -> D ++ : Update application status in database
+    D --> S -- : Confirm status update
+    S --> C -- : Notify JS of status update
+    C --> JS --: Display notification in "List Job Applied" (e.g., "Application Approved")
+end
+
+group JS Views List Job Applied
+    JS -> C ++ : Open "List Job Applied" tab
+    C -> S ++ : Retrieve jobs JS has applied for with status
+    S -> D ++ : Fetch applied jobs for JS with status
+    D --> S -- : Return list of applied jobs with status
+    S --> C -- : Send list to JS
+    C --> JS --: Display "List Job Applied" with application status
+end
+
+@enduml
