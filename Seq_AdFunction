@@ -1,0 +1,64 @@
+@startuml
+actor "Admin" as A
+participant "Controller" as C
+participant "Service" as S
+participant "Database" as D
+participant "Review Algorithm" as RA
+title REPORTING/ACCOUNT MANAGEMENT/REVIEW POST
+group Statistics and Reporting
+    A -> C ++ : Request system statistics
+    C -> S ++ : Retrieve statistics data
+    S -> D ++ : Fetch account and job posting data
+    D --> S -- : Return aggregated data
+    S --> C -- : Provide statistics to Controller
+    C --> A : Display statistics and reports
+    C --
+end
+
+group Account Management
+    A -> C ++ : View user accounts
+    C -> S ++ : Retrieve user account data
+    S -> D ++ : Fetch user accounts from database
+    D --> S -- : Return list of user accounts
+    S --> C -- : Provide list to Controller
+    C --> A : Display user accounts with roles
+    A -> C : Update user role
+    C -> S ++ : Process role update
+    S -> D ++ : Update role in database
+    D --> S -- : Confirm role update
+    S --> C -- : Notify success/failure of role update
+    C --> A : Display confirmation message
+    C --
+end
+
+group Automatic Review of Job Postings
+    C -> RA ++ : Trigger automatic review
+    RA -> S ++ : Retrieve job postings for review
+    S -> D ++ : Fetch job postings from database
+    D --> S -- : Return list of job postings
+    S --> RA : Provide job postings for review
+    RA -> S ++ : Process automatic review results
+    S -> D ++ : Update job posting status in database
+    D --> S -- : Confirm status update
+    S --> RA -- : Notify success/failure of review
+    RA --> C : Update Controller with review results
+    C --
+end
+
+group Manual Review of Job Postings
+    A -> C ++ : View job postings for manual review
+    C -> S ++ : Retrieve job postings that passed automatic review
+    S -> D ++ : Fetch job postings from database
+    D --> S -- : Return list of job postings
+    S --> C -- : Provide list to Controller
+    C --> A : Display job postings for manual review
+    A -> C : Approve/Reject job posting
+    C -> S ++ : Process manual review results
+    S -> D ++ : Update/Delete job posting in database
+    D --> S -- : Confirm action
+    S --> C -- : Notify success/failure of action
+    C --> A : Display confirmation message
+    C --
+end
+
+@enduml
